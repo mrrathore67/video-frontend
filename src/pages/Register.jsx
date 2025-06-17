@@ -11,38 +11,58 @@ function Register() {
     let navigate = useNavigate()
 
 
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     try {
+    //         const response = await fetch("http://localhost:5000/api/auth/register", {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify(form),
+    //         });
+    //         const data = await response.json();
+
+    //         if (!response.ok) {
+    //             throw new Error(errorData.error || `HTTP error! Status: ${response.status}`);
+    //         }
+
+    //         if (data.token) {
+    //             localStorage.setItem("token", data.token);
+    //             // Optional: Update auth context
+    //             login(data.user);  // Using your AuthContext's login function
+    //             navigate("/");
+    //         } else {
+    //             // If you want to proceed without token
+    //             alert("Registration successful! Please login.");
+    //             navigate("/");
+    //         }
+    //     } catch (error) {
+    //         console.error("Registration failed:", error);
+    //         alert(error.message || "Registration failed. Please try again.");
+    //     }
+    // };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch("http://localhost:5000/api/auth/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(form),
-            });
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(errorData.error || `HTTP error! Status: ${response.status}`);
-            }
-
+            const res = await API.post("/auth/register", form);
+            const data = res.data;
+    
             if (data.token) {
                 localStorage.setItem("token", data.token);
-                // Optional: Update auth context
-                login(data.user);  // Using your AuthContext's login function
+                login(data.user); // Update auth context
                 navigate("/");
             } else {
-                // If you want to proceed without token
                 alert("Registration successful! Please login.");
                 navigate("/");
             }
         } catch (error) {
             console.error("Registration failed:", error);
-            alert(error.message || "Registration failed. Please try again.");
+            alert(error.response?.data?.error || "Registration failed. Please try again.");
         }
     };
-
+    
 
     return (
         <>
